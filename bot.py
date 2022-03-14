@@ -1,8 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
+import requests
 
-import menu
 
 driver = webdriver.Chrome()
 driver.get('https://web.whatsapp.com/')
@@ -30,15 +30,15 @@ def bot():
         all_msg = driver.find_elements_by_class_name('_1Gy50')
         all_msg_text = [e.text for e in all_msg]
         msg = all_msg_text[-1]
+        print(msg)
 
         # resp msg
         text_field = driver.find_element_by_xpath(('//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[2]'))
         text_field.click()
+        answer = requests.get("http://localhost/bot/", params={'msg': {msg}, 'number': {final_number},})
+        bot_answer = answer.text
         time.sleep(3)
-             
-        # menu
-        if msg == 'Hi':
-            text_field.send_keys(menu.menu_principal, Keys.ENTER)
+        text_field.send_keys(bot_answer, Keys.ENTER)
 
         # volta ao padrão
         default_contact = driver.find_element_by_class_name('_2XH9R')
